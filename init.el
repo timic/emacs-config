@@ -4,7 +4,18 @@
 (add-to-list 'package-archives
              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 
-(defvar local-packages (quote (projectile auto-complete jedi flx flx-ido ido-vertical-mode neotree web-mode color-theme-sanityinc-tomorrow ergoemacs-mode)))
+(defvar local-packages
+  (quote
+   (projectile
+    auto-complete
+    jedi
+    flx
+    flx-ido
+    ido-vertical-mode
+    neotree
+    web-mode
+    color-theme-sanityinc-tomorrow
+    ergoemacs-mode)))
 (dolist (p local-packages)
   (unless (package-installed-p p)
     (package-install p)))
