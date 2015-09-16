@@ -14,6 +14,7 @@
     ido-vertical-mode
     neotree
     web-mode
+    nlinum
     color-theme-sanityinc-tomorrow
     ace-jump-mode
     ergoemacs-mode)))
@@ -21,10 +22,6 @@
   (unless (package-installed-p p)
     (package-install p)))
 
-(require 'ido)
-(require 'flx)
-(require 'flx-ido)
-(require 'ido-vertical-mode)
 (setq ido-enable-flex-matching t)
 (setq ido-vertical-show-count t)
 (setq ido-create-new-buffer 'always)
@@ -34,20 +31,16 @@
 (ido-vertical-mode t)
 
 ;; builtin
-(require 'bs)
 (setq bs-configurations
       '(("files" "^\\*scratch\\*" nil nil bs-visits-non-file bs-sort-buffer-interns-are-last)))
 (global-set-key (kbd "<f7>") 'bs-show)
 
-(require 'auto-complete-config)
 (ac-config-default)
 (setq ac-show-menu-immediately-on-auto-complete t)
 
-(require 'linum+)
-(setq linum-format "%d ")
-(global-linum-mode 1)
+(global-nlinum-mode t)
+(setq nlinum-format "%d ")
 
-(require 'neotree)
 (global-set-key (kbd "<f8>") 'neotree-toggle)
 
 (scroll-bar-mode -1)
@@ -57,7 +50,6 @@
 (setq projectile-switch-project-action 'projectile-dired)
 
 ;; enable web modes
-(require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
@@ -75,7 +67,6 @@
 (setq markdown-css-theme "clearness")
 
 ;; enable groovy mode
-(require 'groovy-mode)
 (autoload 'groovy-mode "groovy-mode" "Major mode for editing Groovy code." t)
 (add-to-list 'auto-mode-alist '("\.groovy$" . groovy-mode))
 (add-to-list 'auto-mode-alist '("\.gradle$" . groovy-mode))
@@ -88,7 +79,6 @@
              (groovy-electric-mode)))
 
 ;; configure python auto complete
-(require 'jedi)
 (setq jedi:setup-keys t)
 (add-to-list 'ac-sources 'ac-source-jedi-direct)
 (add-hook 'python-mode-hook 'jedi:setup)
