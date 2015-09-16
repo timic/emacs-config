@@ -15,6 +15,7 @@
     neotree
     web-mode
     color-theme-sanityinc-tomorrow
+    ace-jump-mode
     ergoemacs-mode)))
 (dolist (p local-packages)
   (unless (package-installed-p p)
@@ -102,6 +103,8 @@
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 (setq auto-save-list-file-name nil)
+
+(global-set-key (kbd "C-c SPC") 'ace-jump-mode)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
