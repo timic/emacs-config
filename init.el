@@ -1,53 +1,69 @@
-(package-initialize)
-(add-to-list 'load-path "~/.emacs.d/plugins")
 (require 'package)
+(add-to-list 'load-path "~/.emacs.d/plugins")
 (add-to-list 'package-archives
              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(add-to-list 'load-path "~/.emacs.d/plugins/restclient.el")
+(package-initialize)
 
 (defvar local-packages
-  (quote
-   (projectile
+  '(projectile
     auto-complete
+    bash-completion
     jedi
+    pungi
+    swiper
+    cider
+    ac-cider
     flx
     flx-ido
     ido-vertical-mode
-    neotree
+    ido-ubiquitous
+    smex
+    recentf
+    plsense
+    bongo
+    bash-completion
+    powerline
     web-mode
     nlinum
+    smooth-scrolling
+    rainbow-delimiters
     color-theme-sanityinc-tomorrow
     ace-jump-mode
-    ergoemacs-mode)))
+    ergoemacs-mode))
 (dolist (p local-packages)
   (unless (package-installed-p p)
     (package-install p)))
 
-(setq ido-enable-flex-matching t)
-(setq ido-vertical-show-count t)
-(setq ido-create-new-buffer 'always)
+(recentf-mode t)
+(defun my-recentf-ido-find-file ()
+  "Find a recent file using Ido."
+  (interactive)
+  (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
+    (when file
+      (find-file file))))
+
+(powerline-default-theme)
+(add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
+(add-hook 'lisp-mode-hook #'rainbow-delimiters-mode)
+(add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
+
+(ac-config-default)
+(setq ac-auto-show-menu 0.7)
+(setq ac-show-menu-immediately-on-auto-complete t)
+(setq ac-delay 0)
+(setq ac-quick-help-delay 1)
+(setq eldoc-idle-delay 0)
+
 (ido-mode t)
 (ido-everywhere t)
 (flx-ido-mode t)
 (ido-vertical-mode t)
-
-;; builtin
-(setq bs-configurations
-      '(("files" "^\\*scratch\\*" nil nil bs-visits-non-file bs-sort-buffer-interns-are-last)))
-(global-set-key (kbd "<f7>") 'bs-show)
-
-(ac-config-default)
-(setq ac-show-menu-immediately-on-auto-complete t)
-
-(global-nlinum-mode t)
-(setq nlinum-format "%d ")
-
-(global-set-key (kbd "<f8>") 'neotree-toggle)
-
-(scroll-bar-mode -1)
-(setq inhibit-startup-screen t)
+(setq ido-enable-flex-matching t)
+(setq ido-use-faces t)
+(smex-initialize)
 
 (projectile-global-mode)
-(setq projectile-switch-project-action 'projectile-dired)
 
 ;; enable web modes
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
@@ -59,7 +75,6 @@
 (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
 
 ;; enable markdown mode
-
 (autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
@@ -72,29 +87,48 @@
 (add-to-list 'auto-mode-alist '("\.gradle$" . groovy-mode))
 (add-to-list 'interpreter-mode-alist '("groovy" . groovy-mode))
  
-;;; make Groovy mode electric by default.
-(add-hook 'groovy-mode-hook
-          '(lambda ()
-             (require 'groovy-electric)
-             (groovy-electric-mode)))
-
 ;; configure python auto complete
 (setq jedi:setup-keys t)
+(setq jedi:complete-on-dot t)
 (add-to-list 'ac-sources 'ac-source-jedi-direct)
-(add-hook 'python-mode-hook 'jedi:setup)
-(defvar jedi-config:python-module-sentinel "__init__.py")
+(add-hook 'python-mode-hook 'pungi:setup-jedi)
 
-; configure look appearence and keymap
-(load-theme 'sanityinc-tomorrow-night t)
+;; configure clojure
+(add-hook 'cider-mode-hook #'eldoc-mode)
+(setq nrepl-log-messages nil)
+(setq nrepl-hide-special-buffers t)
+(add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
+(add-hook 'cider-mode-hook 'ac-flyspell-workaround)
+(add-hook 'cider-mode-hook 'ac-cider-setup)
+(add-hook 'cider-repl-mode-hook 'ac-cider-setup)
+(eval-after-load "auto-complete"
+  '(progn
+     (add-to-list 'ac-modes 'cider-mode)
+     (add-to-list 'ac-modes 'cider-repl-mode)))
 
-(setq show-paren-style 'expression)
-(show-paren-mode 2)
+(global-set-key (kbd "C-c SPC") 'ace-jump-mode)
+(global-set-key (kbd "<f7>") 'my-recentf-ido-find-file)
+(global-set-key (kbd "<f8>") 'switch-to-buffer)
+
+(bash-completion-setup)
+
+(setq show-paren-style 'mixed)
+(scroll-bar-mode -1)
+(show-paren-mode 1)
 (tool-bar-mode -1)
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 (setq auto-save-list-file-name nil)
+(menu-bar-mode -1)
+(global-linum-mode)
+(setq inhibit-startup-screen t)
 
-(global-set-key (kbd "C-c SPC") 'ace-jump-mode)
+;; replace default search with swiper
+(defalias 'isearch-forward 'swiper)
+(defalias 'isearch-backward 'swiper)
+
+;; configure look appearence and keymap
+(load-theme 'sanityinc-tomorrow-night t)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -103,7 +137,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "c7e8605c82b636fc489340e8276a3983745891e18e77440bbae305d1b5af9201" "4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "ff9e6deb9cfc908381c1267f407b8830bcad6028231a5f736246b9fc65e92b44" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" default)))
+    ("ff9e6deb9cfc908381c1267f407b8830bcad6028231a5f736246b9fc65e92b44" default)))
  '(ergoemacs-ctl-c-or-ctl-x-delay 0.2)
  '(ergoemacs-handle-ctl-c-or-ctl-x (quote both))
  '(ergoemacs-ini-mode t)
@@ -113,7 +147,9 @@
  '(ergoemacs-theme "standard")
  '(ergoemacs-theme-options
    (quote
-    ((apps-swap off)
+    ((apps-toggle off)
+     (apps-apps off)
+     (apps-swap off)
      (f2-edit off)
      (apps off)
      (fn-keys off))))
@@ -128,17 +164,19 @@
 
 ")
  '(line-number-mode nil)
- '(minimap-mode nil)
- '(minimap-width-fraction 0.05)
- '(minimap-window-location (quote right))
  '(org-CUA-compatible nil)
+ '(org-replace-disputed-keys nil)
  '(org-special-ctrl-a/e nil)
  '(org-support-shift-select nil)
+ '(pyvenv-mode t)
+ '(pyvenv-tracking-mode t)
+ '(recentf-menu-before "Open File...")
  '(scroll-bar-mode nil)
  '(scroll-error-top-bottom nil)
  '(set-mark-command-repeat-pop nil)
  '(shift-select-mode t)
- '(size-indication-mode t))
+ '(size-indication-mode t)
+ '(smex-prompt-string "M-x "))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
