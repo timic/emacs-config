@@ -1,5 +1,5 @@
 (require 'package)
-(add-to-list 'load-path "~/.emacs.d/plugins")
+(add-to-list 'load-path "~/.emacs.d/plugins/")
 (add-to-list 'package-archives
              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (add-to-list 'load-path "~/.emacs.d/plugins/restclient.el")
@@ -22,11 +22,11 @@
     recentf
     plsense
     bongo
-    bash-completion
     powerline
     web-mode
     nlinum
     smooth-scrolling
+    paredit
     rainbow-delimiters
     color-theme-sanityinc-tomorrow
     ace-jump-mode
@@ -62,7 +62,6 @@
 (setq ido-enable-flex-matching t)
 (setq ido-use-faces t)
 (smex-initialize)
-
 (projectile-global-mode)
 
 ;; enable web modes
@@ -73,6 +72,9 @@
 (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+
+;; enable restclient
+(require 'restclient)
 
 ;; enable markdown mode
 (autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t)
@@ -105,6 +107,10 @@
   '(progn
      (add-to-list 'ac-modes 'cider-mode)
      (add-to-list 'ac-modes 'cider-repl-mode)))
+;;(add-hook 'clojure-mode-hook #'paredit-mode)
+;;(add-hook 'emacs-lisp-mode-hook #'paredit-mode)
+;;(add-hook 'cider-mode-hook #'paredit-mode)
+
 
 (global-set-key (kbd "C-c SPC") 'ace-jump-mode)
 (global-set-key (kbd "<f7>") 'my-recentf-ido-find-file)
@@ -135,6 +141,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(browse-url-browser-function (quote browse-url-chromium))
  '(custom-safe-themes
    (quote
     ("ff9e6deb9cfc908381c1267f407b8830bcad6028231a5f736246b9fc65e92b44" default)))
@@ -164,6 +171,9 @@
 
 ")
  '(line-number-mode nil)
+ '(minimap-dedicated-window nil)
+ '(minimap-mode nil)
+ '(minimap-window-location (quote right))
  '(org-CUA-compatible nil)
  '(org-replace-disputed-keys nil)
  '(org-special-ctrl-a/e nil)
@@ -182,4 +192,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(minimap-active-region-background ((t (:background "gray20")))))
