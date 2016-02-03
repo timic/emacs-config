@@ -8,6 +8,8 @@
 (defvar local-packages
   '(projectile
     auto-complete
+    fuzzy
+    yasnippet
     bash-completion
     jedi
     pungi
@@ -26,7 +28,6 @@
     web-mode
     nlinum
     smooth-scrolling
-    paredit
     rainbow-delimiters
     color-theme-sanityinc-tomorrow
     ace-jump-mode
@@ -48,11 +49,9 @@
 (add-hook 'lisp-mode-hook #'rainbow-delimiters-mode)
 (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
 
+(yas-global-mode)
+
 (ac-config-default)
-(setq ac-auto-show-menu 0.7)
-(setq ac-show-menu-immediately-on-auto-complete t)
-(setq ac-delay 0)
-(setq ac-quick-help-delay 1)
 (setq eldoc-idle-delay 0)
 
 (ido-mode t)
@@ -107,10 +106,6 @@
   '(progn
      (add-to-list 'ac-modes 'cider-mode)
      (add-to-list 'ac-modes 'cider-repl-mode)))
-;;(add-hook 'clojure-mode-hook #'paredit-mode)
-;;(add-hook 'emacs-lisp-mode-hook #'paredit-mode)
-;;(add-hook 'cider-mode-hook #'paredit-mode)
-
 
 (global-set-key (kbd "C-c SPC") 'ace-jump-mode)
 (global-set-key (kbd "<f7>") 'my-recentf-ido-find-file)
@@ -122,10 +117,10 @@
 (scroll-bar-mode -1)
 (show-paren-mode 1)
 (tool-bar-mode -1)
+(menu-bar-mode -1)
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 (setq auto-save-list-file-name nil)
-(menu-bar-mode -1)
 (global-linum-mode)
 (setq inhibit-startup-screen t)
 
@@ -141,6 +136,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ac-auto-show-menu t)
+ '(ac-auto-start 2)
+ '(ac-candidate-menu-min 2)
+ '(ac-delay 0.01)
+ '(ac-use-fuzzy t)
  '(browse-url-browser-function (quote browse-url-chromium))
  '(custom-safe-themes
    (quote
@@ -162,6 +162,7 @@
      (fn-keys off))))
  '(ergoemacs-use-menus t)
  '(fringe-mode 0 nil (fringe))
+ '(global-auto-complete-mode t)
  '(global-hl-line-mode t)
  '(ido-vertical-define-keys (quote C-n-and-C-p-only))
  '(initial-scratch-message
@@ -170,10 +171,6 @@
 ;; then enter the text in that file's own buffer.
 
 ")
- '(line-number-mode nil)
- '(minimap-dedicated-window nil)
- '(minimap-mode nil)
- '(minimap-window-location (quote right))
  '(org-CUA-compatible nil)
  '(org-replace-disputed-keys nil)
  '(org-special-ctrl-a/e nil)
@@ -192,4 +189,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(minimap-active-region-background ((t (:background "gray20")))))
+ '(ac-candidate-face ((t (:background "gray25" :foreground "light gray")))))
