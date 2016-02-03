@@ -5,6 +5,9 @@
 (add-to-list 'load-path "~/.emacs.d/plugins/restclient.el")
 (package-initialize)
 
+(unless package-archive-contents
+  (package-refresh-contents))
+
 (defvar local-packages
   '(projectile
     auto-complete
@@ -44,12 +47,12 @@
     (when file
       (find-file file))))
 
-(powerline-default-theme)
+;;(powerline-default-theme)
 (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
 (add-hook 'lisp-mode-hook #'rainbow-delimiters-mode)
 (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
 
-(yas-global-mode)
+;(yas-global-mode)
 
 (ac-config-default)
 (setq eldoc-idle-delay 0)
@@ -76,11 +79,11 @@
 (require 'restclient)
 
 ;; enable markdown mode
-(autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t)
-(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-(setq markdown-css-dir "~/.emacs.d/plugins/md-css/")
-(setq markdown-css-theme "clearness")
+;;(autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t)
+;;(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+;;(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+;;(setq markdown-css-dir "~/.emacs.d/plugins/md-css/")
+;;(setq markdown-css-theme "clearness")
 
 ;; enable groovy mode
 (autoload 'groovy-mode "groovy-mode" "Major mode for editing Groovy code." t)
